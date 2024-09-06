@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiro Oblicuo</title>
+    <style>
+        canvas {
+            background-color: white;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+
+<script>
+    // Inicialización del canvas y el contexto
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Colores
+    const WHITE = '#FFFFFF';
+    const BLACK = '#000000';
+    const MAGENTA = '#FF00FF';
+
+    // Función para convertir grados a radianes
+    function degToRad(deg) {
+        return deg * Math.PI / 180;
+    }
+
+    // Parámetros iniciales
+    let x = 50;
+    let y = 550;
+    let g = 10; // Gravedad en píxeles/s^2
+    let a = 0.3; // Factor de fricción viscosa
+    let time = 0;
+
+    // Posición del objetivo (barra)
+    const target_x = canvas.width * 0.9;
+    const target_y = canvas.height / 2;
+    const target_width = canvas.width * 0.05; // 5% del ancho de la pantalla
+    const target_height = 10;
+
+    // Variables de color de fondo
+    let backgroundColor = WHITE;
+
+    // Función para dibujar todo lo estático
+    function drawStaticElements() {
+        // Dibujar el recuadro alrededor de la pantalla
+        ctx.strokeStyle = BLACK;
+        ctx.lineWidth = 5;
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar los ejes x e y
+        drawAxes();
+        
+        // Dibujar la barra horizontal (el objetivo)
+        drawGoalBar();
+    }
+    
+    // Dibujar la barra horizontal (rectángulo)
+    function drawGoalBar() {
+        ctx.fillStyle = BLACK;
+        ctx.fillRect(target_x - target_width, target_y, target_width, target_height);
+    }
+
+    // Función para dibujar ejes X e Y con flechas y etiquetas
+    function drawAxes() {
+        const margin_x = canvas.width * 0.05;  // 5% del ancho desde la izquierda
+        const margin_y = canvas.height * 0.05;  // 5% del alto desde el fondo
+    
+        const origin_x = margin_x;
+        const origin_y = canvas.height - margin_y;
+    
+        const axis_length = 100;  // Longitud de los ejes
+        const arrow_size = 10;    // Tamaño de la flecha
+
+        ctx.strokeStyle = BLACK;
+        ctx.lineWidth = 3;
+        ctx.fillStyle = BLACK;
+
+        // Dibujar eje X
+        ctx.beginPath();
+        ctx.moveTo(origin_x, origin_y);
+        ctx.lineTo(origin_x + axis_length, origin_y);
+        ctx.stroke();
+
+        // Flecha en el eje X
+        ctx.beginPath();
+        ctx.moveTo(origin_x + axis_length, origin_y);
+        ctx.lineTo(origin_x + axis_length - arrow_size, origin_y - arrow_size / 2);
+        ctx.lineTo(origin_x + axis_length - arrow_size, origin_y + arrow_size / 2);
+        ctx.closePath();
+        ctx.fill();
+
+        // Etiqueta "x"
+        ctx.font = '20px Arial';
+        ctx.fillText('x', origin_x + axis_length + 10, origin_y + 5);
+
+        // Dibujar eje Y
+        ctx.beginPath();
+        ctx.moveTo(origin_x, origin_y);
+        ctx.lineTo(origin_x, origin_y - axis_length);
+        ctx.stroke();
+
+        // Flecha en el eje Y
+        ctx.beginPath();
+        ctx.moveTo(origin_x, origin_y - axis_length);
+        ctx.lineTo(origin_x - arrow_size / 2, origin_y - axis_length + arrow_size);
+        ctx.lineTo(origin_x + arrow_size / 2, origin_y - axis_length + arrow_size);
+        ctx.closePath();
+        ctx.fill();
+
+        // Etiqueta "y"
+        ctx.fillText('y', origin_x - 15, origin_y - axis_length - 10);
+    }
+
+    // Captura de ángulo y velocidad del usuario
+    function getUserInput() {
+        angle = parseFloat(prompt("Ingresa el ángulo de lanzamiento (en grados): "));
+        speed = parseFloat(prompt("Ingresa la velocidad inicial (en píxeles/segundo): "));
+    }
+
+    // Inicializar el juego
+    function initializeGame() {
+        drawStaticElements();  // Dibuja los elementos estáticos
+        //getUserInput();        // Captura la entrada del usuario
+        angle = 30
+        speed = 200
+        //let first = 1;
+        gameLoop();           // Inicia el ciclo del juego
+    }
+
+    // Ciclo principal del juego
+    function gameLoop() {
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar los elementos estáticos (ejes y barra)
+        drawStaticElements();
+
+        // Actualizar el tiempo
+        time += 0.1;
+
+        // Cálculo de la posición del proyectil
+        const v0x = speed * Math.cos(degToRad(angle));
+        const v0y = speed * Math.sin(degToRad(angle));
+
+        const x_pos = x + (v0x / a) * (1 - Math.exp(-a * time));
+        const y_pos = y - (v0y + (g / a)) / a * (1 - Math.exp(-a * time)) + (g / a) * time;
+
+        // Dibujar el proyectil (corrigiendo el problema del círculo aplastado)
+        ctx.beginPath();
+        ctx.arc(x_pos, y_pos, 5, 0, Math.PI * 2, false); // Asegúrate de que el radio sea consistente (5px)
+        ctx.fillStyle = BLACK;
+        ctx.fill();
+        ctx.closePath();
+
+        // Comprobar si el proyectil cruza la barra
+        if ((x_pos >= target_x - target_width && x_pos <= target_x) && (y_pos >= target_y && y_pos <= target_y + target_height)) {
+            backgroundColor = MAGENTA;
+        }
+
+        // Reiniciar si el proyectil toca el suelo
+        if (y_pos > canvas.height) {
+            time = 0;
+            backgroundColor = WHITE;
+            first = 0;
+            getUserInput();  // Captura la entrada del usuario nuevamente
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    // Llamar a initializeGame después de un pequeño retraso para asegurar que el canvas esté listo
+    setTimeout(initializeGame, 100);
+
+</script>
+
+</body>
+</html>
+
