@@ -16,6 +16,28 @@
 
 <canvas id="gameCanvas" width="800" height="600"></canvas>
 
+<style>
+    /* Añade un margen superior al formulario */
+    .form-container {
+        text-align: center;
+        margin-top: 20px;  /* Ajusta el valor según el espacio deseado */
+    }
+</style>
+
+
+<!-- Formulario para ingresar los valores de la barra -->
+<div id="gameControls" style="text-align: center;">
+ <p>  </p>
+    <label for="angulo"> Ángulo:</label>
+    <input type="number" id="angulo" value="30">
+    
+    <label for="speed"> Velocidad:</label>
+    <input type="number" id="speed" value="100">
+    
+    <button id="launchButton" onclick="startLaunch()" disabled>Lanzar la pelota</button>
+</div>
+
+
 <script>
     // Inicialización del canvas y el contexto
     const canvas = document.getElementById('gameCanvas');
@@ -25,6 +47,7 @@
     const WHITE = '#FFFFFF';
     const BLACK = '#000000';
     const MAGENTA = '#FF00FF';
+    const GRAY = '#808080';
 
     // Función para convertir grados a radianes
     function degToRad(deg) {
@@ -34,20 +57,36 @@
     // Parámetros iniciales
     let x = 50;
     let y = 550;
-    let g = 10; // Gravedad en píxeles/s^2
+    let g = 10;  // Gravedad en píxeles/s^2
     let a = 0.3; // Factor de fricción viscosa
+    
     let time = 0;
+    let isRunning = true;    // Verdadero cuando la pelota está en el aire.
+    let goalCount = 0; // Contador de goles
+    let endCount = 3;   // Máximo número de goles para ganar.
 
-    // Posición del objetivo (barra)
-    const target_x = canvas.width * 0.9;
-    const target_y = canvas.height / 2;
-    const target_width = canvas.width * 0.05; // 5% del ancho de la pantalla
+    // Posición del objetivo (barra) en coordenadas del canvas
+    let target_x = 600; //canvas.width * 0.9;
+    let target_y = 300;//canvas.height * 0.4;
+    const target_width = 40; //canvas.width * 0.05; // 5% del ancho de la pantalla
     const target_height = 10;
+    
+    // Definición global de los márgenes (los margenes vienen de gpt, a mi no me
+    // convencen)  
+    // origen de coordenadas x-y del juego, el cual no esta exactamente en una 
+    // de las esquinas del rectangulo de juego. 
+    const margin_x = canvas.width * 0.05;  // 5% del ancho desde la izquierda
+    const margin_y = canvas.height * 0.05;  // 5% del alto desde el fondo
+
+    // Estas son las coordenadas del origen en coordenadas del lienzo del canvas 
+    const origin_x = margin_x;
+    const origin_y = canvas.height - margin_y;
+
 
     // Variables de color de fondo
     let backgroundColor = WHITE;
 
-    // Función para dibujar todo lo estático
+    // Función para dibujar todo lo estático ============================================
     function drawStaticElements() {
         // Dibujar el recuadro alrededor de la pantalla
         ctx.strokeStyle = BLACK;
@@ -57,24 +96,44 @@
         // Dibujar los ejes x e y
         drawAxes();
         
-        // Dibujar la barra horizontal (el objetivo)
-        drawGoalBar();
+        // Dibujar la barra en la posición target_x, target_y
+        drawGoalBar(target_x, target_y);
+        
     }
     
-    // Dibujar la barra horizontal (rectángulo)
-    function drawGoalBar() {
+    // Dibujar la barra horizontal (rectángulo) en la posición especificada
+    // Las coordenadass x e y son respecto a las coordenadas del canvas
+    // La barra va desde x a x + taraget_width, que corresponde x-origin_x a 
+    // x-origin_x+target_with en coordendas del juego. 
+    function drawGoalBar(x, y) {
         ctx.fillStyle = BLACK;
-        ctx.fillRect(target_x - target_width, target_y, target_width, target_height);
+        ctx.fillRect(x, y, target_width, target_height);
+        
+        // Mostrar la posición de la barra
+        ctx.fillStyle = BLACK;
+        ctx.font = '16px Arial';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(`Barra entre: (${Math.round(target_x)-origin_x}, ${Math.round(-target_y+origin_y)}) y (${Math.round(target_x)-origin_x+target_width}, ${Math.round(-target_y+origin_y)})`, 10, 10);
+        
+        
+    }   
+    
+    // Dibujar la barra horizontal (rectángulo) en la posición especificada
+    function drawPreviousBar(x, y) {
+        ctx.fillStyle = GRAY;
+        ctx.fillRect(x, y, target_width, target_height);
+    }   
+    
+    function drawRect(){
+        ctx.fillStyle = GRAY;
+        ctx.fillRect(20, 20, 500, 100);
     }
+    
 
-    // Función para dibujar ejes X e Y con flechas y etiquetas
+    // Función para dibujar ejes X e Y con flechas y etiquetas 
     function drawAxes() {
-        const margin_x = canvas.width * 0.05;  // 5% del ancho desde la izquierda
-        const margin_y = canvas.height * 0.05;  // 5% del alto desde el fondo
-    
-        const origin_x = margin_x;
-        const origin_y = canvas.height - margin_y;
-    
+   
         const axis_length = 100;  // Longitud de los ejes
         const arrow_size = 10;    // Tamaño de la flecha
 
@@ -116,12 +175,97 @@
 
         // Etiqueta "y"
         ctx.fillText('y', origin_x - 15, origin_y - axis_length - 10);
+        //ctx.fillText(`${axis_length}px`, origin_x + 10, origin_y - axis_length / 2);
+        
+        // Dibujar el contador de goles en el canvas
+        drawGoalCounter();
+        
     }
-
+    // ==================================================================================
+    
+    
     // Captura de ángulo y velocidad del usuario
-    function getUserInput() {
-        angle = parseFloat(prompt("Ingresa el ángulo de lanzamiento (en grados): "));
-        speed = parseFloat(prompt("Ingresa la velocidad inicial (en píxeles/segundo): "));
+    // function getUserInput() {
+    //     angle = parseFloat(prompt("Ingresa el ángulo de lanzamiento (en grados): "));
+    //     speed = parseFloat(prompt("Ingresa la velocidad inicial (en píxeles/segundo): "));
+    // }
+    
+    // Función para dibujar el contador de goles en el canvas
+    function drawGoalCounter() {
+        ctx.fillStyle = BLACK;
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`Goles: ${goalCount} / ${endCount}`, canvas.width - 10, canvas.height - 10);
+        
+       
+        
+    }
+    
+    
+    // Función para iniciar el lanzamiento de la pelota
+    function startLaunch() {
+        // Este mensaje se mostrará en la consola cuando se llame a la función
+        //console.log("startLaunch ha sido ejecutado");  
+
+
+        if (!isRunning) {
+            // Deshabilitar el botón
+            document.getElementById("launchButton").disabled = true;
+
+            // Obtener los valores del ángulo y velocidad
+            angle = parseFloat(document.getElementById("angulo").value);
+            speed = parseFloat(document.getElementById("speed").value);
+
+            // Iniciar el lanzamiento
+            isRunning = true;
+            backgroundColor = WHITE;
+            gameLoop();
+        }
+    }
+    
+    
+    // Función para mostrar la posición del proyectil
+    function displayPosition(x_pos, y_pos) {
+        // Ajustar el sistema de coordenadas para que y aumente hacia arriba desde el origen en la esquina inferior izquierda
+        const adjusted_y_pos = canvas.height - y_pos;
+
+        // Mostrar las coordenadas del impacto
+        ctx.fillStyle = BLACK;
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`Impactó en: (${Math.round(x_pos-origin_x)}, ${Math.round(-y_pos+origin_y)})`, canvas.width / 2, canvas.height / 2);
+        
+        
+        // Dibujar un círculo en el punto de impacto
+        ctx.beginPath();
+        ctx.arc(x_pos, y_pos, 10, 0, Math.PI * 2);  // Ajusta el radio del círculo según sea necesario
+        ctx.fillStyle = 'black';  // Color del círculo de impacto
+        ctx.fill();
+        ctx.closePath();
+            
+    }
+    
+
+    function DrawEnd() {
+        // Borrar el canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Configurar el estilo del texto
+        ctx.fillStyle = 'black'; // Color del texto
+        ctx.font = '30px Arial'; // Fuente y tamaño del texto
+        ctx.textAlign = 'center'; // Alinear el texto al centro
+        ctx.textBaseline = 'middle'; // Alinear el texto verticalmente al centro
+
+        // Mensaje a mostrar
+        const message = "1.618033988749895";
+
+        // Dibujar el mensaje en el centro del canvas
+        ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+
+        // Ocultar el formulario
+        document.getElementById('gameControls').style.display = 'none';
     }
 
     // Inicializar el juego
@@ -136,11 +280,8 @@
 
     // Ciclo principal del juego
     function gameLoop() {
-        ctx.fillStyle = backgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Dibujar los elementos estáticos (ejes y barra)
-        drawStaticElements();
+        //console.log("Dentro de gameLoop()",angle,speed);
+        if (!isRunning) return;  // Detener el ciclo si isRunning es falso
 
         // Actualizar el tiempo
         time += 0.1;
@@ -148,32 +289,94 @@
         // Cálculo de la posición del proyectil
         const v0x = speed * Math.cos(degToRad(angle));
         const v0y = speed * Math.sin(degToRad(angle));
+        //console.log(angle,speed,v0x,v0y);
 
-        const x_pos = x + (v0x / a) * (1 - Math.exp(-a * time));
-        const y_pos = y - (v0y + (g / a)) / a * (1 - Math.exp(-a * time)) + (g / a) * time;
 
-        // Dibujar el proyectil (corrigiendo el problema del círculo aplastado)
+        // Ajustar la posición del proyectil con respecto al origen
+        // x_pos e y_pos están en coordenadas del lienzo del canvas
+        const x_pos = origin_x + (v0x / a) * (1 - Math.exp(-a * time));
+        const y_pos = origin_y - ((v0y + (g / a)) / a * (1 - Math.exp(-a * time)) - (g / a) * time);
+        const v_y   = -(v0y + (g / a)) / a * Math.exp(-a * time) + ( g / a );      
+
+
+        // dibuja la pantalla        
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar los elementos estáticos (ejes y barra)
+        drawStaticElements();
+
+        // Dibujar el proyectil
         ctx.beginPath();
         ctx.arc(x_pos, y_pos, 5, 0, Math.PI * 2, false); // Asegúrate de que el radio sea consistente (5px)
         ctx.fillStyle = BLACK;
         ctx.fill();
         ctx.closePath();
 
+
+        // Verificar si el proyectil toca los bordes de la pantalla
+        if (x_pos <= 0 || x_pos >= canvas.width || y_pos <= 0 || y_pos >= canvas.height) {
+            speed = 0;
+            time = 0;
+            isRunning = false;  // Detener el ciclo del juego
+
+            // Esperar un segundo antes de reiniciar el juego
+            //setTimeout(() => {
+                //getUserInput();  // Pedir de nuevo ángulo y velocidad
+                //isRunning = true;  // Reiniciar el ciclo después de recibir la entrada
+              //  requestAnimationFrame(gameLoop);
+            //}, 1);  // Espera de 1000 ms (1 segundo)
+            
+            
+            if (backgroundColor == WHITE){
+                        goalCount = 0;
+            }
+
+            // dibuja la pantalla        
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawPreviousBar(target_x,target_y);
+
+            // Generar posiciones aleatorias para la barra dentro de los márgenes deseados
+            target_x = Math.random() * (canvas.width * 0.8);  // 80% del ancho
+            target_y = Math.random() * (canvas.height * 0.8); // 80% de la altura
+
+            document.getElementById("launchButton").disabled = false;
+
+
+            // Dibujar los elementos estáticos (ejes y barra)
+            drawStaticElements();
+            drawGoalBar(target_x,target_y);
+
+            // Mostrar la posición donde tocó el borde
+            displayPosition(x_pos, y_pos);
+
+            //drawRect();      
+            //console.log("Dentro de gameLoop()",goalCount,endCount);
+            if (goalCount == endCount){
+            
+                DrawEnd();
+            }      
+            
+            return;
+        }
+
         // Comprobar si el proyectil cruza la barra
-        if ((x_pos >= target_x - target_width && x_pos <= target_x) && (y_pos >= target_y && y_pos <= target_y + target_height)) {
+        if ((x_pos >= target_x  && x_pos <= target_x + target_width) &&
+            (y_pos >= target_y && y_pos <= target_y + target_height) && v_y > 0 ) {
+            if (backgroundColor == WHITE){
+                        goalCount++;
+            }
             backgroundColor = MAGENTA;
         }
 
-        // Reiniciar si el proyectil toca el suelo
-        if (y_pos > canvas.height) {
-            time = 0;
-            backgroundColor = WHITE;
-            first = 0;
-            getUserInput();  // Captura la entrada del usuario nuevamente
-        }
+
+
 
         requestAnimationFrame(gameLoop);
     }
+
 
     // Llamar a initializeGame después de un pequeño retraso para asegurar que el canvas esté listo
     setTimeout(initializeGame, 100);
