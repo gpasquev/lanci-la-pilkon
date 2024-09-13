@@ -296,7 +296,7 @@
         // x_pos e y_pos están en coordenadas del lienzo del canvas
         const x_pos = origin_x + (v0x / a) * (1 - Math.exp(-a * time));
         const y_pos = origin_y - ((v0y + (g / a)) / a * (1 - Math.exp(-a * time)) - (g / a) * time);
-        const v_y   = -(v0y + (g / a)) / a * Math.exp(-a * time) + ( g / a );      
+        const v_y   = -(v0y + (g / a)) * Math.exp(-a * time) + ( g / a );      
 
 
         // dibuja la pantalla        
@@ -361,6 +361,7 @@
             
             return;
         }
+        console.log("Dentro de gameLoop()",goalCount,endCount,v_y,x_pos,y_pos,target_x,target_y);
 
         // Comprobar si el proyectil cruza la barra
         if ((x_pos >= target_x  && x_pos <= target_x + target_width) &&
