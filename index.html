@@ -3,10 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Project Title</title>
-    <link rel="stylesheet" href="styles.css">
-    <meta http-equiv="refresh" content="0;url=tiro.html">
-</head>
 
+
+    <!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script> -->
+
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+
+    <title>Introducción al Lanza La Pelota</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            padding: 50px;
+            max-width: 800px; /* Ancho máximo de la página */
+            margin: 0 auto; /* Márgenes laterales automáticos para centrar */            
+            
+            
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+
+        }
+        
+        h2 {
+            color: #333;
+            text-align: center;
+
+        }v
+        
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+        ol {
+            font-size: 18px;
+            text-align: left;
+            margin: 0 auto;
+            display: inline-block;
+            padding-left: 50px;
+            color: #666;
+        }
+        
+        
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1> Bienvenido a Lanci la pilkon</h1>
+
+    <p><center><i> Advertencia: este juego fue diseñado para ser jugado en pantalla de PC 
+    </center></i></p>
+
+    <p> 
+    Este juego te desafía a lanzar una pelota con un ángulo y velocidad dada de manera 
+    que su trayectoria pase a través de un objeto dado. La pelota debe pasar el objeto 
+    desde arriba hacia abajo.
+    </p>
+    
+    <p> 
+    La pelota es lanzada desde un punto establecido (el origen de 
+    coordenadas) con una velocidad (\( v_0 \)) y ángulo (\(\alpha\)) respecto a la 
+    horizontal.
+    </p>
+
+    <p> 
+    Para que el lanzamiento sea exitoso la pelota debe atravesar el blanco desde arriba 
+    hacia abajo. En ese caso se gana un punto. Similar al concepto de encestar una
+    pelota en un aro de basquet. Parte de la dificultad de este juego recide en que el 
+    blanco cambia de posición entre lanzamientos. Por suerte las coordendas (respecto 
+    al origen de coordenadas) son anunciadas previo a cada lanzamiento.   
+    El juego finaliza exitosamente luego 
+    de tres aciertos consecutivos.   
+    </p>
+
+    <p> 
+    Bien! Puedes pasar directamente al juego cliqueando el botón azul al final de 
+    esta pantalla, y puedes volver a esta página de explicación y sugerencias cuando lo 
+    creas necesario.
+    </p>
+
+    <h2> Camino largo pero seguro</h2>
+
+    <p>
+    Si no hay suerte con los intentos basado en la intuición podemos pasar a estudiar la 
+    mecánica del juego y ver de anticpara angulo y velociadad de manera de lograr 
+    el acierto.  
+    </p> 
+
+    <p> 
+    En este juego el desplazamaieno de la pelota está afectado por una fuerza 
+    gravitatoria \( -m g \hat{\jmath} \)  (\(m\) es la masa de la pelota) y una fuerza 
+    viscosa proporcional al opuesto de la velociad, \( \vec{F}_v = -\eta \vec{v} \). 
+    Etás dos fuerzas inducen una aceleración en la pelota,  
+        
+        $$\vec{a} =  \frac{d\vec{v}}{dt} = -g\hat{\jmath} - \lambda \vec{v}$$
+        
+    donde \( \lambda = \eta/m \). Disponemos así de una ecuación diferencial (vectorial) 
+    para la velocidad, la cual puede desacolplarse en dos ecuaciones diferenciales, una 
+    para cada una de su dos componentes, 
+
+        $$ v_x^{\prime}(t) = - \lambda v_x(t)$$
+
+        $$ v_y^{\prime}(t) = - g - \lambda v_y(t)$$
+
+   Estas ecuaciones dependen de los parámetros \(g\) y \(\lambda\) y la solución de estas
+   ecuaciones resultan las componenete \(x\) e \(y\) de la velocidad en 
+   función del tiempo. Encontrandese este juego dirigido a alumnos de calculo integral, 
+   es parte del juego resolver las dos ecuaciones diferenciales. 
+   <b> Para esta primer versión del juego faciliatermos el acceso a la
+   solución e informaremos los valores de \( g \) ( \( g = 10 \) )  y de \( \lambda \) 
+   ( \( \lambda = 0.3 \) )</b>.
+   Pero notar que estos valores pueden obtenerse 
+   insepccionando las coordenadas de impacto y de máximo de la trayectoria de la pelota 
+   dada una condición inicial.
+   Aún con esta ayuda, se debe tener en cuenta que al resolver las ecuaciones surgirán 
+   constantes de integración para cada una de ellas que deber ser determinadas con las 
+   condicones inciales. En este jego, la condición inicial para la velocidad queda 
+   definida por el usuario a partir de \( v_0 \) y \( \alpha \). Notar que pueden 
+   utilizar las respectivas componentes en \( x \) y en \( y \), en las expresiones 
+   que desarrollen:  \( v_{0x} = v_0 \cos{\alpha} \) y 
+   \( v_{0y} = v_0 \sin{\alpha} \). Las condiciones iniciale serían entonces, 
+   \( v_x(0) = v_{0x} \) y \( v_y(0) = v_{0y} \).
+   
+   </p>
+   <p>
+   ¡Pero aún no tenemos lo necesario para resolver el problema! necesitamos la posición de 
+   la pelota en función del tiempo. Para eso integramos las velocidades obtenidas, 
+   considerando las siguientes ecuaciones,
+  
+        $$ x^{\prime}(t) = v_x(t) $$
+
+        $$ y^{\prime}(t) = v_y(t) $$
+       
+   Aquí nuevamente surgen constantes de integración, las cuales 
+   nuevamente ajustamos por condiciones iniciales. En este problema la pelota 
+   está en el origen de coordenadas en el instante inicial, por lo tanto se debe 
+   satisfacer que \( x(0) = 0 \) y \( y(0) = 0 \).
+   </p>
+   
+   <p>
+   Bueno, ¡hemos avanzado un montón! En este momento debemos contar con \( x(t) \) 
+   e \( y(t) \).   Pero resulta, que aún disponiendo de estas expresiones  
+   no es sencillo despejar los valores \( v_{0x} \) y \( v_{0y} \) tales que la 
+   trayectoria atraviese el blanco. 
+   Podemos eliminar el tiempo entre  \( x(t) \) e \( y(t) \) y obtener una curva 
+   \( y = y(x) \), pero aún así no es sencillo despejar los valores de la velocidades 
+   iniciales desde esa expresión. 
+   </p>
+   
+   <p>
+   ¡Pero aún tenemos que encestar tres veces consecutivas!
+   </p>
+   
+   
+   
+   <p>
+   Para abordar el problema, podemos hacer uso de las simulaciones. A continuación 
+   desarrollamos este enfoque utilizando la calculadora gráfica de Geogebra. 
+      
+   Podemos usar esta calculadora para trazar las trayectorias que seguiría la pelota,
+   según las expresiones que encontramos y así encontrar aquella combinación
+   de ángulo y velocidad necesariass para el correcto acierto del objetivo. 
+   
+   En el siguiente enlace damos ciertas instrucciones y herramientas para continuar
+   la busqueda de la solución mediente esta metodología.  
+   <A HREF="ayuda-con-geogebra.html"> Enlace a la página con lineamientos para el uso de 
+   Geogebra para este problema </A> 
+   (sugerimos abrirlo en una pestaña o ventana diferente a la
+   que se está corriendo el juego).
+   
+   
+    </p>
+
+   
+
+
+ 
+  
+    <!-- Botón que redirige al juego -->
+   <center> <button onclick="window.location.href='tiro.html'">Comenzar el Juego</button> 
+   </center>
+
+</body>
 </html>
 
