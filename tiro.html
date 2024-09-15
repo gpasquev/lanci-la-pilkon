@@ -240,12 +240,12 @@
     // Función para mostrar la posición del proyectil
     function displayPosition(x_pos, y_pos) {
         // Ajustar el sistema de coordenadas para que y aumente hacia arriba desde el origen en la esquina inferior izquierda
-        const adjusted_y_pos = canvas.height - y_pos;
+        // const adjusted_y_pos = canvas.height - y_pos;
 
         // Mostrar las coordenadas del impacto
         ctx.fillStyle = BLACK;
         ctx.font = '16px Arial';
-        ctx.textAlign = 'center';
+        ctx.textAlign = 'center';   
         ctx.textBaseline = 'middle';
         ctx.fillText(`Impactó en ~ (${Math.round(x_pos-origin_x)}, ${Math.round(-y_pos+origin_y)})`, canvas.width*0.85, canvas.height*0.04);
         ctx.fillText(`Máximo en: (${Math.round(xmax-origin_x)},${Math.round(-ymax+origin_y)})`, canvas.width*0.85, canvas.height*0.08);
@@ -325,11 +325,11 @@
         const y_pos = origin_y - ((v0y + (g / a)) / a * (1 - Math.exp(-a * time)) - (g / a) * time);
         const v_y   = -(v0y + (g / a)) * Math.exp(-a * time) + ( g / a );      
 
-        // registramos altura máxima y posicin de máximo
+        // registramos altura máxima y posición de máximo
         console.log("Dentro de gameLoop()",y_pos,ymax);
         if (y_pos<ymax){
-        ymax = y_pos;
-        xmax = x_pos;
+            ymax = y_pos;
+            xmax = x_pos;
         }
 
         // dibuja la pantalla        
@@ -348,7 +348,7 @@
 
 
         // Verificar si el proyectil toca los bordes de la pantalla
-        if (x_pos <= 0 || x_pos >= canvas.width || y_pos <= 0 || y_pos >= canvas.height) {
+        if (x_pos < 0 || x_pos > canvas.width || y_pos < 0 || y_pos > canvas.height) {
             speed = 0;
             time = 0;
             isRunning = false;  // Detener el ciclo del juego
@@ -365,8 +365,8 @@
             drawPreviousBar(target_x,target_y);
 
             // Generar posiciones aleatorias para la barra dentro de los márgenes deseados
-            target_x = Math.random() * (canvas.width * 0.8);  // 80% del ancho
-            target_y = Math.random() * (canvas.height * 0.8); // 80% de la altura
+            target_x = canvas.width * ( 0.15 + Math.random() * 0.80);  // entre 15% 100% del ancho. 
+            target_y = canvas.height* ( 0.05 + Math.random() * 0.9);  // 5% de arriba y 5% de abajo.
 
             document.getElementById("launchButton").disabled = false;
 
