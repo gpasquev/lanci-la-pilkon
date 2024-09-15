@@ -54,51 +54,56 @@
 
 <body>
  <p>
- Al final de está pagina tienes embebdido una calculadora Geogebra preparada para que 
- pruebes tu propuesta de trayectoria. Está orientada a probar una expresión \( y = y(x) \). 
- Si aún no eliminaste el tiempo entre \( x(t) \) y \( y(t) \) puedes armar otra entrda para
- graficar la curva en forma parámetrica. Pero eso lo dejo en tus manos. 
+ Al final de está página tienes embebido una calculadora Geogebra preparada para que 
+ pruebes tu propuesta de trayectoria. Está construida para una expresión del 
+ tipo \( y = y(x) \). Si aún no eliminaste el tiempo entre \( x(t) \) y \( y(t) \) debes 
+ hacerlo para utlizar este simulador, y sino armar uno equivalente pero utilizando 
+ curvas paramétricas. Pero eso lo dejo en tus manos. 
  </p>
 
 <p>
 Dejame contarte cual fue el protocolo de construcción, de maenra que tengas más elementos
-para amodificarlo si es que es necesario. 
+para modificarlo si es que es necesario. 
 </p>
 
 
 <p>
-Primero definimos un deslizador para el parámetro \( \alpha \) entre 0 y 100 (considerendo
-que eventualmente se necesitan ángulos mayores a 90º. Luego se construyó un deslizador para el parámetro
+Primero definimos un deslizador para el parámetro \( \alpha \) entre 0 y 100 (este último valor para 
+considerar eventualmente ángulos mayores a 90º). Luego se construyó un deslizador para el parámetro
 \( v_0 \), con valores entre 0 y 500. A continuación se definieron \( v_{0x} \) y \(v_{0y} \)
 como el producto de \( v_0 \) por el \(\cos(\alpha)\) o el \(\mathrm{sen}(\alpha)\) respectivamente.
 De esta manera podemos usar esas proyecciones de velocidad inicial directamente en nuestro modelo.
-Luego definimos los parámetros \( g=10 \) y \( \lambda = 0.3 \), que automáticamente Geogebra le
-asigna deslizores (que no vamos a usar). Agregué una recta en \( x = 570\) y otra en \(y = 760\),
-que representan los bordes superior y derecho de la zona de juego. Si has estado jugando 
-debes comprender que el qué más importa es el superior. Luego la parte más importante,
-la expresión entre \( y \) y \( x \) para la curva que estamos proponiendo. Seguramente 
-utlices los parámeros \(v_{0x}\) ,\(v_{0y}\), \(g\) y \( \lambda \) en la definción de \( y = y(x) \).
-Por último utilizamos un punto (aquí quedó con el nombre A) para identificar al blanco. 
+Luego definimos los parámetros \( g=10 \) y \( \lambda = 0.3 \) (para los cuales Geogebra nos
+generó automáticamente dos deslizadores, queno usaremos). Agregamos una recta en \( x = 570\) 
+y otra en \(y = 760\), que representan los bordes superior y derecho de la zona de juego. 
+Si has estado jugando sabrás que conocer la posición del límite superior es relevante para 
+la elección de la trayectoria. <b>Luego incorporamos a la construcción 
+la expresión entre \( y \) y \( x \) para la curva que estamos proponiendo.</b> Seguramente 
+utlices los parámetros \(v_{0x}\) ,\(v_{0y}\), \(g\) y \( \lambda \) en la definción de 
+\( y = y(x) \). Por último, utilizamos un simple punto para simular al objetivo
+(aquí quedó con el nombre A). 
 </p>
 
 <p>
-Con el simulador armado, colocamos el punto de prueba en la posición en que se 
+Con el simulador armado, movemos el punto de prueba a la posición en que se 
 encuentra al barra-objetivo en el juego de la plota. Luego variando el 
 ángulo \(\alpha \) y la velocidad \( v_0\) buscamos los valores de estos que permiten
-acertar al blanco de la manera que necesitamos. 
+acertar al blanco de la manera que necesitamos. ¡Listo! Si todo es correcto, esos mismos 
+valores te permitirán acertar a la barrita horizontal. 
 </p>
 
 <p>
-Suerte! 
+¡Suerte! 
 </p>
 
 
 <iframe src="auxiliar_llp_2.html" width="1000" height="600" style="border: none;"></iframe>
 
+<p>
 Probablemente convenga abrir esta calculadora en otra pestaña, cliquear el siguiente enlace
 para eso <a href="auxiliar_llp_2.html" 
 target="_blank" style="color: blue; text-decoration: underline;">Ir a auxiliar_llp_2.html</a>.
-
+</p>
 
 
 </body>

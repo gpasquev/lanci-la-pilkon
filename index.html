@@ -85,9 +85,9 @@
     <p> 
     Para que el lanzamiento sea exitoso la pelota debe atravesar el blanco desde arriba 
     hacia abajo. En ese caso se gana un punto. Similar al concepto de encestar una
-    pelota en un aro de basquet. Parte de la dificultad de este juego recide en que el 
-    blanco cambia de posición entre lanzamientos. Por suerte las coordendas (respecto 
-    al origen de coordenadas) son anunciadas previo a cada lanzamiento.   
+    pelota en un aro de basquet. Parte de la dificultad de este juego reside en que el 
+    blanco cambia de posición entre lanzamientos. Por suerte las coordendas son 
+    anunciadas previo a cada lanzamiento.   
     El juego finaliza exitosamente luego 
     de tres aciertos consecutivos.   
     </p>
@@ -102,12 +102,12 @@
 
     <p>
     Si no hay suerte con los intentos basado en la intuición podemos pasar a estudiar la 
-    mecánica del juego y ver de anticpara angulo y velociadad de manera de lograr 
+    mecánica del juego y ver de anticipar el ángulo y velociadad de manera de lograr 
     el acierto.  
     </p> 
 
     <p> 
-    En este juego el desplazamaieno de la pelota está afectado por una fuerza 
+    En este juego el desplazamiento de la pelota está afectado por una fuerza 
     gravitatoria \( -m g \hat{\jmath} \)  (\(m\) es la masa de la pelota) y una fuerza 
     viscosa proporcional al opuesto de la velociad, \( \vec{F}_v = -\eta \vec{v} \). 
     Etás dos fuerzas inducen una aceleración en la pelota,  
@@ -115,7 +115,7 @@
         $$\vec{a} =  \frac{d\vec{v}}{dt} = -g\hat{\jmath} - \lambda \vec{v}$$
         
     donde \( \lambda = \eta/m \). Disponemos así de una ecuación diferencial (vectorial) 
-    para la velocidad, la cual puede desacolplarse en dos ecuaciones diferenciales, una 
+    para la velocidad, la cual puede desacoplarse en dos ecuaciones diferenciales, una 
     para cada una de su dos componentes, 
 
         $$ v_x^{\prime}(t) = - \lambda v_x(t)$$
@@ -124,8 +124,8 @@
 
    Estas ecuaciones dependen de los parámetros \(g\) y \(\lambda\) y la solución de estas
    ecuaciones resultan las componenete \(x\) e \(y\) de la velocidad en 
-   función del tiempo. Encontrandese este juego dirigido a alumnos de calculo integral, 
-   es parte del juego resolver las dos ecuaciones diferenciales. 
+   función del tiempo. Siendo que este juego está dirigido a alumnos de cálculo integral, 
+   es parte del mismo resolver las dos ecuaciones diferenciales. 
    <b> Para esta primer versión del juego faciliatermos el acceso a la
    solución e informaremos los valores de \( g \) ( \( g = 10 \) )  y de \( \lambda \) 
    ( \( \lambda = 0.3 \) )</b>.
@@ -133,8 +133,8 @@
    insepccionando las coordenadas de impacto y de máximo de la trayectoria de la pelota 
    dada una condición inicial.
    Aún con esta ayuda, se debe tener en cuenta que al resolver las ecuaciones surgirán 
-   constantes de integración para cada una de ellas que deber ser determinadas con las 
-   condicones inciales. En este jego, la condición inicial para la velocidad queda 
+   constantes de integración para cada una de ellas que deben ser determinadas con las 
+   condicones inciales. En este juego, la condición inicial para la velocidad queda 
    definida por el usuario a partir de \( v_0 \) y \( \alpha \). Notar que pueden 
    utilizar las respectivas componentes en \( x \) y en \( y \), en las expresiones 
    que desarrollen:  \( v_{0x} = v_0 \cos{\alpha} \) y 
@@ -179,7 +179,7 @@
       
    Podemos usar esta calculadora para trazar las trayectorias que seguiría la pelota,
    según las expresiones que encontramos y así encontrar aquella combinación
-   de ángulo y velocidad necesariass para el correcto acierto del objetivo. 
+   de ángulo y velocidad necesarias para el correcto acierto del objetivo. 
    
    En el siguiente enlace damos ciertas instrucciones y herramientas para continuar
    la busqueda de la solución mediente esta metodología.  
