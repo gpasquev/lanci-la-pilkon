@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script> -->
+
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+
+    <title>Despejar de las ecuaciones de movimiento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            padding: 50px;
+            max-width: 800px; /* Ancho máximo de la página */
+            margin: 0 auto; /* Márgenes laterales automáticos para centrar */            
+            
+            
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+
+        }
+        
+        h2 {
+            color: #333;
+            text-align: center;
+
+        }
+        
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+        ol {
+            font-size: 18px;
+            text-align: left;
+            margin: 0 auto;
+            display: inline-block;
+            padding-left: 50px;
+            color: #666;
+        }
+        
+        
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1> Solo lápiz y papel</h1>
+
+    <p> 
+    Existen infinitas combinaciones de ángulos y velocidades que permiten acertar 
+    al blanco. No debería ser complicado encontrar alguna. A continuación, 
+    sugerimos un método para lograrlo.
+    </p>
+    
+    <p>
+    Hasta este momento debes tener expresiones del siguiente tipo:
+    $$
+     \left\{
+	       \begin{array}{ll}
+		 x = x(t;v_{0x},v_{0y},g,\lambda) \\
+		 y = y(t;v_{0x},v_{0y},g,\lambda) 
+		   \end{array}
+	     \right.
+    $$
+    O eventualmente ya has despejado \(t\) de la primera y remplazado en la segunda
+    para tener una expresión solo en \(x y\),
+    $$
+    y = y(x;v_{0x},v_{0y},g,\lambda)
+    $$
+    (los argumentos a la derecha del punto y coma "\( ;\)" indican los parámetros del modelo 
+    \( \lambda \) y \(g\), y los iniciales \(v_{x0}\) y \( v_{y0} \) que pueden aparecer en 
+    esas expresiones) 
+    
+    </p>
+    
+    <p>
+    Sean \( (x_b, y_b)\) laas coordenadas del blanco. 
+    En la búsqueda de  \(v_{x0}\) y \( v_{y0} \) sugerimos iniciar por estudiar como 
+    es el movimiento en \(x\). La expresión \(x(t)\) a la que llegaron debe tender 
+    asintóticamente a un valor máximo. O sea, dada una condición inicial, existe 
+    un alcance máximo.  Eso se debe a la resistencia del aire. Si han estado intentando 
+    acertarle al blanco deben haber observado que la velocidad en x va disminuyendo hasta valores
+    casi nulos, quedando solo un movimiento vertical. 
+    Bien, ese alcance máximo depende de \(v_{0x}\) y \( \lambda \). Es condición 
+    necesaria para pegarle al blanco que el alcance máximo sea mayor que la abscisa del blanco. 
+    Propongamos entonces un factor en la relación entre esas dos cantidades de manera que
+    se cumpla esa condición, por ejemplo \( \mathrm{alcance}  = 1.1 x_b\). Estamos
+    pidiendo que el alcance sea 1.1 de \( x_b \), o sea un 10% mayor.
+    Esta condición te permitirá despejar \( v_{0x} \) dependiente de \(x_b\) y \(\lambda\). 
+    ¡Hazlo!.
+    </p>
+
+    <p>  
+    Nos falta conocer \(v_{0y} \).  
+    Le debemos imponer a la curva que \(y=y_b\) cuando \(x = x_b\). 
+    Para eso si tienen a su disposición la expresión \( y = y(x) \)
+    simplemente hay que despejar \( v_{0y} \) de 
+    $$
+    \underline{y_b} = y(\underline{x_b};\underline{v_{0x}},v_{0y},\underline{g},\underline{\lambda})
+    $$   
+    En la expresión anterior se encuentran subrayados los literales que ya son, a esta 
+    altura, datos conocidos. Resulta entonces una ecuación con una incógnita (\(v_{0y})\).
+    </p>
+    
+    <p>
+    Si aún no tenías esa expresión, pero si \( x(t)\) y \( y(t\)),  tendrás que
+    eliminar \( t\) inevitablemente para acceder a \(v_{0y}\). Es decir a partir de
+    $$
+     \left\{
+	       \begin{array}{ll}
+		 \underline{x_b} = x(t;\underline{v_{0x}},v_{0y},\underline{g},\underline{\lambda}) \\
+		 \underline{y_b} = y(t;\underline{v_{0x}},v_{0y},\underline{g},\underline{\lambda}) 
+		   \end{array}
+	     \right.
+    $$
+    tendrás que eliminar \(t\) para encontrar \(v_{0y}\). Aquí también los literales 
+    subrayados son datos conocidos. Se trata por lo tanto de un sistema de dos ecuaciones
+    con dos incógnitas. 
+    
+    </p>
+    
+    <p>
+    Con \( v_{x0} \) y \( v_{y0}\) a nuestra disposición, el ángulo inicial y el módulo
+    de la velocidad inicial son simplemente:
+    $$
+    \alpha = \arctan\left(\frac{v_{0y}}{v_0x} \right)   
+    $$
+    y 
+    $$
+    v_0 = \sqrt{v_{0x}^2+v_{0y}^2}
+    $$
+    </p>
+
+    <p> ¡Buen lápiz y papel! </p> 
+
+
+ 
+  
+</body>
+</html>
+
